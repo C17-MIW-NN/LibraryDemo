@@ -8,9 +8,15 @@
 
 <h1>Overview of all the books</h1>
 
-<p>
-    Je vroeg om deze pagina om <span th:text="${requesttime}"></span>.
-</p>
+<table>
+    <th>
+        <td>Title</td>
+    </th>
+
+    <tr th:each="book : ${books}">
+        <td th:text="${book.title}"></td>
+    </tr>
+</table>
 
 </body>
 </html>
