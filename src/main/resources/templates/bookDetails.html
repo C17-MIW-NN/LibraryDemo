@@ -16,5 +16,9 @@
     <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
 </ul>
 
+<p>
+    <a th:href="@{/book/all}">Show Book overview</a>
+</p>
+
 </body>
 </html>
