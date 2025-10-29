@@ -1,11 +1,15 @@
 package nl.miwnn.ch17.vincent.librarydemo.controller;
 
 import nl.miwnn.ch17.vincent.librarydemo.model.Book;
+import nl.miwnn.ch17.vincent.librarydemo.repositories.BookRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -15,17 +19,39 @@ import java.util.ArrayList;
 
 @Controller
 public class BookController {
+    private final BookRepository bookRepository;
 
-    @GetMapping("/books")
-    private static String showBookOverview(Model datamodel) {
-        ArrayList<Book> books = new ArrayList<>();
+    public BookController(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
-        books.add(new Book("The Hobbit"));
-        books.add(new Book("The Lord of the Rings"));
-
-        datamodel.addAttribute("books", books);
+    @GetMapping({"/book/all", "/"})
+    public String showBookOverview(Model datamodel) {
+        datamodel.addAttribute("books", bookRepository.findAll());
 
         return "bookOverview";
+    }
+
+    @GetMapping("/book/add")
+    public String showBookForm(Model datamodel) {
+        datamodel.addAttribute("formBook", new Book());
+
+        return "bookForm";
+    }
+
+    @PostMapping("/book/save")
+    public String saveOrUpdateBook(@ModelAttribute("formBook") Book bookToBeSaved, BindingResult result) {
+        if (!result.hasErrors()) {
+            bookRepository.save(bookToBeSaved);
+        }
+
+        return "redirect:/book/all";
+    }
+
+    @GetMapping("/book/delete/{bookId}")
+    public String deleteBook(@PathVariable("bookId") Long bookId) {
+        bookRepository.deleteById(bookId);
+        return "redirect:/book/all";
     }
 
 }
