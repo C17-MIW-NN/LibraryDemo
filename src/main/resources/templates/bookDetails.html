@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail for a book</title>
+</head>
+<body>
+
+<h1>Detail for <span th:value="${book.title}"></span></h1>
+
+<a th:href="@{/copy/new/{bookId}(bookId = ${book.bookId})}">Buy</a>
+<a th:href="@{/book/edit/{title}(title = ${book.title})}">edit</a>
+<a th:href="@{/book/delete/{bookId}(bookId = ${book.bookId})}">delete</a>
+
+<ul>
+    <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
+</ul>
+
+</body>
+</html>

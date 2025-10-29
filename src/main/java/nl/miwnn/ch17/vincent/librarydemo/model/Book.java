@@ -16,6 +16,7 @@ public class Book {
     @Id @GeneratedValue
     Long bookId;
 
+    @Column(unique = true)
     String title;
 
     @ManyToMany

@@ -6,6 +6,7 @@ import nl.miwnn.ch17.vincent.librarydemo.repositories.BookRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,9 +41,9 @@ public class BookController {
         return showBookForm(datamodel, new Book());
     }
 
-    @GetMapping("/book/edit/{bookId}")
-    public String showEditBookForm(@PathVariable("bookId") Long bookId, Model datamodel) {
-        Optional<Book> optionalBook = bookRepository.findById(bookId);
+    @GetMapping("/book/edit/{title}")
+    public String showEditBookForm(@PathVariable("title") String title, Model datamodel) {
+        Optional<Book> optionalBook = bookRepository.findByTitle(title);
 
         if (optionalBook.isPresent()) {
             return showBookForm(datamodel, optionalBook.get());
@@ -59,11 +60,21 @@ public class BookController {
     }
 
     @PostMapping("/book/save")
-    public String saveOrUpdateBook(@ModelAttribute("formBook") Book bookToBeSaved, BindingResult result) {
-        if (!result.hasErrors()) {
-            bookRepository.save(bookToBeSaved);
+    public String saveOrUpdateBook(@ModelAttribute("formBook") Book bookToBeSaved,
+                                   BindingResult result,
+                                   Model datamodel) {
+        Optional<Book> bookWithSameTitle = bookRepository.findByTitle(bookToBeSaved.getTitle());
+
+        if (bookWithSameTitle.isPresent() && !bookWithSameTitle.get().getBookId().equals(bookToBeSaved.getBookId())) {
+            result.addError(new FieldError("book", "title",
+                    "this title is already in use by another book"));
         }
 
+        if (result.hasErrors()) {
+            return showBookForm(datamodel, bookToBeSaved);
+        }
+
+        bookRepository.save(bookToBeSaved);
         return "redirect:/book/all";
     }
 
@@ -71,6 +82,19 @@ public class BookController {
     public String deleteBook(@PathVariable("bookId") Long bookId) {
         bookRepository.deleteById(bookId);
         return "redirect:/book/all";
+    }
+
+    @GetMapping("/book/detail/{title}")
+    public String showBookDetailpage(@PathVariable("title") String title, Model datamodel) {
+        Optional<Book> bookToShow = bookRepository.findByTitle(title);
+
+        if (bookToShow.isEmpty()) {
+            return "redirect:/book/all";
+        }
+
+        datamodel.addAttribute("book", bookToShow.get());
+
+        return "bookDetails";
     }
 
 }
