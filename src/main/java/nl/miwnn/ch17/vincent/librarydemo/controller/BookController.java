@@ -60,7 +60,7 @@ public class BookController {
         Optional<Book> optionalBook = bookRepository.findById(bookId);
 
         if (optionalBook.isPresent()) {
-            datamodel.addAttribute("formBook", optionalBook);
+            datamodel.addAttribute("formBook", optionalBook.get());
             return "bookForm";
         }
 
