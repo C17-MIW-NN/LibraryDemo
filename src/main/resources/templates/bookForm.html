@@ -11,6 +11,14 @@
 <form th:action="@{/book/save}" method="post" th:object="${formBook}">
     <input type="hidden" th:field="*{bookId}">
     Title: <input type="text" th:field="*{title}">
+
+    Author:
+    <select th:field="*{authors}" multiple>
+        <option th:each="author : ${allAuthors}"
+                th:text="${author.name}"
+                th:value="${author.authorId}">
+        </option>
+    </select>
     <input type="submit" value="Save book">
 </form>
 

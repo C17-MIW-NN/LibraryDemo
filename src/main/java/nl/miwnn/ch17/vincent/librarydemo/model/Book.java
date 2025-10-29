@@ -1,11 +1,9 @@
 package nl.miwnn.ch17.vincent.librarydemo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Vincent Velthuizen
@@ -19,6 +17,9 @@ public class Book {
     Long bookId;
 
     String title;
+
+    @ManyToMany
+    private Set<Author> authors;
 
     @OneToMany(mappedBy = "book")
     private List<Copy> copies;
@@ -53,5 +54,21 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
+
+    public List<Copy> getCopies() {
+        return copies;
+    }
+
+    public void setCopies(List<Copy> copies) {
+        this.copies = copies;
     }
 }

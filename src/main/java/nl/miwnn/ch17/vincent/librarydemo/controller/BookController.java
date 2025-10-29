@@ -1,6 +1,7 @@
 package nl.miwnn.ch17.vincent.librarydemo.controller;
 
 import nl.miwnn.ch17.vincent.librarydemo.model.Book;
+import nl.miwnn.ch17.vincent.librarydemo.repositories.AuthorRepository;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.BookRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +21,11 @@ import java.util.Optional;
 
 @Controller
 public class BookController {
+    private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
 
-    public BookController(BookRepository bookRepository) {
+    public BookController(AuthorRepository authorRepository, BookRepository bookRepository) {
+        this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
     }
 
@@ -35,7 +38,23 @@ public class BookController {
 
     @GetMapping("/book/add")
     public String showBookForm(Model datamodel) {
-        datamodel.addAttribute("formBook", new Book());
+        return showBookForm(datamodel, new Book());
+    }
+
+    @GetMapping("/book/edit/{bookId}")
+    public String showEditBookForm(@PathVariable("bookId") Long bookId, Model datamodel) {
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+
+        if (optionalBook.isPresent()) {
+            return showBookForm(datamodel, optionalBook.get());
+        }
+
+        return "redirect:/book/all";
+    }
+
+    private String showBookForm(Model datamodel, Book book) {
+        datamodel.addAttribute("formBook", book);
+        datamodel.addAttribute("allAuthors", authorRepository.findAll());
 
         return "bookForm";
     }
@@ -52,18 +71,6 @@ public class BookController {
     @GetMapping("/book/delete/{bookId}")
     public String deleteBook(@PathVariable("bookId") Long bookId) {
         bookRepository.deleteById(bookId);
-        return "redirect:/book/all";
-    }
-
-    @GetMapping("/book/edit/{bookId}")
-    public String showEditBookForm(@PathVariable("bookId") Long bookId, Model datamodel) {
-        Optional<Book> optionalBook = bookRepository.findById(bookId);
-
-        if (optionalBook.isPresent()) {
-            datamodel.addAttribute("formBook", optionalBook.get());
-            return "bookForm";
-        }
-
         return "redirect:/book/all";
     }
 
