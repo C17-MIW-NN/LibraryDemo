@@ -38,4 +38,28 @@ public class CopyController {
         return "redirect:/book/all";
     }
 
+    @GetMapping("/borrow/{copyId}")
+    private String makeCopyUnavailable(@PathVariable("copyId") Long copyId) {
+        return setCopyAvailability(copyId, false);
+    }
+
+    @GetMapping("/return/{copyId}")
+    private String makeCopyAvailable(@PathVariable("copyId") Long copyId) {
+        return setCopyAvailability(copyId, true);
+    }
+
+    private String setCopyAvailability(Long copyId, boolean available) {
+        Optional<Copy> optionalCopy = copyRepository.findById(copyId);
+
+        if (optionalCopy.isEmpty()) {
+            return "redirect:/";
+        }
+
+        Copy copy = optionalCopy.get();
+        copy.setAvailable(available);
+        copyRepository.save(copy);
+
+        return "redirect:/book/detail/" + copy.getBook().getTitle();
+    }
+
 }

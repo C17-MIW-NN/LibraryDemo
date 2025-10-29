@@ -12,8 +12,24 @@
 <a th:href="@{/book/edit/{title}(title = ${book.title})}">edit</a>
 <a th:href="@{/book/delete/{bookId}(bookId = ${book.bookId})}">delete</a>
 
+<h2>Authors</h2>
+
 <ul>
     <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
+</ul>
+
+<h2>Copies</h2>
+
+<p>
+    <span th:text="${book.availableNumberOfCopies}"></span> copies available out of a total of <span th:text="${book.numberOfCopies}"></span> copies owned.
+</p>
+
+<ul>
+    <li th:each="copy : ${book.copies}">
+        <a th:if="${copy.available}" th:href="@{/copy/borrow/{copyId}(copyId = ${copy.copyId})}">borrow</a>
+        <a th:unless="${copy.available}" th:href="@{/copy/return/{copyId}(copyId = ${copy.copyId})}">return</a>
+        (<span th:text="${copy.copyId}"></span>)
+    </li>
 </ul>
 
 <p>
