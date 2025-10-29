@@ -30,12 +30,14 @@ public class CopyController {
     private String createNewCopy(@PathVariable("bookId") Long bookId) {
         Optional<Book> optionalBook = bookRepository.findById(bookId);
 
-        if (optionalBook.isPresent()) {
-            Copy copy = new Copy(optionalBook.get());
-            copyRepository.save(copy);
+        if (optionalBook.isEmpty()) {
+            return "redirect:/book/all";
         }
 
-        return "redirect:/book/all";
+        Copy copy = new Copy(optionalBook.get());
+        copyRepository.save(copy);
+
+        return redirectToBookDetailpage(copy);
     }
 
     @GetMapping("/borrow/{copyId}")
@@ -59,6 +61,10 @@ public class CopyController {
         copy.setAvailable(available);
         copyRepository.save(copy);
 
+        return redirectToBookDetailpage(copy);
+    }
+
+    private String redirectToBookDetailpage(Copy copy) {
         return "redirect:/book/detail/" + copy.getBook().getTitle();
     }
 

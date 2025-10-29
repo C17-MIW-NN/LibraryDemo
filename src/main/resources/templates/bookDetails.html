@@ -9,8 +9,8 @@
 <h1>Detail for <span th:value="${book.title}"></span></h1>
 
 <a th:href="@{/copy/new/{bookId}(bookId = ${book.bookId})}">Buy</a>
-<a th:href="@{/book/edit/{title}(title = ${book.title})}">edit</a>
-<a th:href="@{/book/delete/{bookId}(bookId = ${book.bookId})}">delete</a>
+<a th:href="@{/book/edit/{title}(title = ${book.title})}">Edit</a>
+<a th:href="@{/book/delete/{bookId}(bookId = ${book.bookId})}">Delete</a>
 
 <h2>Authors</h2>
 

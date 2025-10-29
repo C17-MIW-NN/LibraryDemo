@@ -75,7 +75,7 @@ public class BookController {
         }
 
         bookRepository.save(bookToBeSaved);
-        return "redirect:/book/all";
+        return "redirect:/book/detail/" + bookToBeSaved.getTitle();
     }
 
     @GetMapping("/book/delete/{bookId}")
