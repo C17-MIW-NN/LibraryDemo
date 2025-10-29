@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * @author Vincent Velthuizen
@@ -51,6 +52,18 @@ public class BookController {
     @GetMapping("/book/delete/{bookId}")
     public String deleteBook(@PathVariable("bookId") Long bookId) {
         bookRepository.deleteById(bookId);
+        return "redirect:/book/all";
+    }
+
+    @GetMapping("/book/edit/{bookId}")
+    public String showEditBookForm(@PathVariable("bookId") Long bookId, Model datamodel) {
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+
+        if (optionalBook.isPresent()) {
+            datamodel.addAttribute("formBook", optionalBook);
+            return "bookForm";
+        }
+
         return "redirect:/book/all";
     }
 

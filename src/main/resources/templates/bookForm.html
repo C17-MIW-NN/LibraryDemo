@@ -9,6 +9,7 @@
 <h1>Add a new book</h1>
 
 <form th:action="@{/book/save}" method="post" th:object="${formBook}">
+    <input type="hidden" th:field="*{bookId}">
     Title: <input type="text" th:field="*{title}">
     <input type="submit" value="Save book">
 </form>
