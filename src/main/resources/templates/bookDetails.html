@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head th:replace="~{fragments/general :: baseheader(~{:: title})}">
-    <title>Replace this title</title>
+    <title th:text="|Details for ${book.title}|"></title>
 </head>
 
 <body>
@@ -9,7 +9,7 @@
 <div th:replace="~{fragments/general :: navbar}"></div>
 
 <div class="container">
-    <h1>Detail for <span th:value="${book.title}"></span></h1>
+    <h1>Detail for <span th:text="${book.title}"></span></h1>
 
     <a th:href="@{/copy/new/{bookId}(bookId = ${book.bookId})}">Buy</a>
     <a th:href="@{/book/edit/{title}(title = ${book.title})}"><i class="bi bi-pencil"></i> Edit</a>

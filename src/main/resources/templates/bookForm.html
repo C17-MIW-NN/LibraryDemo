@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head th:replace="~{fragments/general :: baseheader(~{:: title})}">
-    <title>Replace this title</title>
+    <title th:if="${formBook.bookId == null}">Add a new book</title>
+    <title th:unless="${formBook.bookId == null}" th:text="|Edit ${formBook.title}|"></title>
 </head>
 
 <body>
@@ -9,7 +10,8 @@
 <div th:replace="~{fragments/general :: navbar}"></div>
 
 <div class="container">
-    <h1>Add a new book</h1>
+    <h1 th:if="${formBook.bookId == null}">Add a new book</h1>
+    <h1 th:unless="${formBook.bookId == null}" th:text="|Edit ${formBook.title}|"></h1>
 
     <form th:action="@{/book/save}" method="post" th:object="${formBook}">
         <input type="hidden" th:field="*{bookId}">
