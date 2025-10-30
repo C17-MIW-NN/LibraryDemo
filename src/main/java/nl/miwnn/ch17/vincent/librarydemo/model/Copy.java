@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
+import java.time.LocalDate;
+
 /**
  * @author Vincent Velthuizen
  * A physical copy of a book that can be available or lend out.
@@ -18,12 +20,15 @@ public class Copy {
 
     private Boolean available;
 
+    private LocalDate purchasedOn;
+
     @ManyToOne
     private Book book;
 
     public Copy(Book book) {
         this.book = book;
         this.available = DEFAULT_AVAILABLE;
+        this.purchasedOn = LocalDate.now();
     }
 
     /**
@@ -54,5 +59,13 @@ public class Copy {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public LocalDate getPurchasedOn() {
+        return purchasedOn;
+    }
+
+    public void setPurchasedOn(LocalDate purchasedOn) {
+        this.purchasedOn = purchasedOn;
     }
 }
