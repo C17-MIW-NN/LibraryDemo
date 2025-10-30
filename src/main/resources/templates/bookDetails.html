@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Detail for a book</title>
+<head th:replace="~{fragments/general :: baseheader(~{:: title})}">
+    <title>Replace this title</title>
 </head>
+
 <body>
 
-<h1>Detail for <span th:value="${book.title}"></span></h1>
+<div th:replace="~{fragments/general :: navbar}"></div>
 
-<a th:href="@{/copy/new/{bookId}(bookId = ${book.bookId})}">Buy</a>
-<a th:href="@{/book/edit/{title}(title = ${book.title})}">Edit</a>
-<a th:href="@{/book/delete/{bookId}(bookId = ${book.bookId})}">Delete</a>
+<div class="container">
+    <h1>Detail for <span th:value="${book.title}"></span></h1>
 
-<h2>Authors</h2>
+    <a th:href="@{/copy/new/{bookId}(bookId = ${book.bookId})}">Buy</a>
+    <a th:href="@{/book/edit/{title}(title = ${book.title})}"><i class="bi bi-pencil"></i> Edit</a>
+    <a th:href="@{/book/delete/{bookId}(bookId = ${book.bookId})}">Delete</a>
 
-<ul>
-    <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
-</ul>
+    <h2>Authors</h2>
 
-<h2>Copies</h2>
+    <ul>
+        <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
+    </ul>
 
-<p>
-    <span th:text="${book.availableNumberOfCopies}"></span> copies available out of a total of <span th:text="${book.numberOfCopies}"></span> copies owned.
-</p>
+    <h2>Copies</h2>
 
-<ul>
-    <li th:each="copy : ${book.copies}">
-        <a th:if="${copy.available}" th:href="@{/copy/borrow/{copyId}(copyId = ${copy.copyId})}">borrow</a>
-        <a th:unless="${copy.available}" th:href="@{/copy/return/{copyId}(copyId = ${copy.copyId})}">return</a>
-        (<span th:text="${copy.copyId}"></span>)
-    </li>
-</ul>
+    <p>
+        <span th:text="${book.availableNumberOfCopies}"></span> copies available out of a total of <span th:text="${book.numberOfCopies}"></span> copies owned.
+    </p>
 
-<p>
-    <a th:href="@{/book/all}">Show Book overview</a>
-</p>
+    <ul>
+        <li th:each="copy : ${book.copies}">
+            <a th:if="${copy.available}" th:href="@{/copy/borrow/{copyId}(copyId = ${copy.copyId})}">borrow</a>
+            <a th:unless="${copy.available}" th:href="@{/copy/return/{copyId}(copyId = ${copy.copyId})}">return</a>
+            (<span th:text="${copy.copyId}"></span>)
+        </li>
+    </ul>
+</div>
+
+<div th:replace="~{fragments/general :: footer}"></div>
+<div th:replace="~{fragments/general :: bottomScripts}"></div>
 
 </body>
 </html>

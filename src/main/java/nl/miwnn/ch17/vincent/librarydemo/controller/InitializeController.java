@@ -62,7 +62,7 @@ public class InitializeController {
         return author;
     }
 
-    private Book makeBook(String title, int numberOfCopies, Author... authors) {
+    private Book makeBook(String title, int numberOfCopies, Author ... authors) {
         Book book = new Book();
 
         book.setTitle(title);

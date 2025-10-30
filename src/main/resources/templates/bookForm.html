@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Add new book</title>
+<head th:replace="~{fragments/general :: baseheader(~{:: title})}">
+    <title>Replace this title</title>
 </head>
+
 <body>
 
-<h1>Add a new book</h1>
+<div th:replace="~{fragments/general :: navbar}"></div>
 
-<form th:action="@{/book/save}" method="post" th:object="${formBook}">
-    <input type="hidden" th:field="*{bookId}">
-    Title: <input type="text" th:field="*{title}">
+<div class="container">
+    <h1>Add a new book</h1>
 
-    Author:
-    <select th:field="*{authors}" multiple>
-        <option th:each="author : ${allAuthors}"
-                th:text="${author.name}"
-                th:value="${author.authorId}">
-        </option>
-    </select>
-    <input type="submit" value="Save book">
-</form>
+    <form th:action="@{/book/save}" method="post" th:object="${formBook}">
+        <input type="hidden" th:field="*{bookId}">
+        Title: <input type="text" th:field="*{title}">
 
-<p>
-    <a th:href="@{/book/all}">Show Book overview</a>
-</p>
+        Author:
+        <select th:field="*{authors}" multiple>
+            <option th:each="author : ${allAuthors}"
+                    th:text="${author.name}"
+                    th:value="${author.authorId}">
+            </option>
+        </select>
+        <input type="submit" value="Save book">
+    </form>
+</div>
+
+<div th:replace="~{fragments/general :: footer}"></div>
+<div th:replace="~{fragments/general :: bottomScripts}"></div>
 
 </body>
 </html>
