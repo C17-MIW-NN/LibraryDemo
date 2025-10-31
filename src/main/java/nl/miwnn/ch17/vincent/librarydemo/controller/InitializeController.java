@@ -42,14 +42,9 @@ public class InitializeController {
         Author rothfuss = makeAuthor("Patrick Rothfuss");
         Author tolkien = makeAuthor("J.R.R. Tolkien");
 
-        makeBook("The Hobbit", 3, tolkien);
-        makeBook("The Lord of the Rings", 5, tolkien);
-        makeBook("The Name of the Wind", 2, rothfuss);
-        makeBook("A Wise Man's Fear", 1, rothfuss);
-        makeBook("Mistborn: The Final Empire", 3, sanderson);
-        makeBook("Mistborn: The Well of Ascension", 2, sanderson);
-        makeBook("Mistborn: The Hero of Ages", 2, sanderson);
-        makeBook("Fantasy: a collection", 2, tolkien, rothfuss, sanderson);
+        makeBook("The Hobbit", 3, "The Hobbit, or There and Back Again is a children's fantasy novel by the English author J. R. R. Tolkien...", "https://images.thenile.io/r1000/9780261103283.jpg", tolkien);
+        makeBook("The Lord of the Rings", 5, "The Lord of the Rings is an epic high fantasy novel by the English author and scholar J. R. R. Tolkien...", "https://www.bibdsl.co.uk/imagegallery/bookdata/cd427/9780261103252.JPG", tolkien);
+        makeBook("The Name of the Wind", 2, "The Name of the Wind, also referred to as The Kingkiller Chronicle: Day One, is a heroic fantasy novel written by American author Patrick Rothfuss. It is the first book in the ongoing fantasy trilogy The Kingkiller Chronicle, followed by The Wise Man's Fear. It was published on March 27, 2007, by DAW Books.", "https://upload.wikimedia.org/wikipedia/en/5/56/TheNameoftheWind_cover.jpg", rothfuss);
     }
 
     private Author makeAuthor(String name) {
@@ -62,10 +57,12 @@ public class InitializeController {
         return author;
     }
 
-    private Book makeBook(String title, int numberOfCopies, Author ... authors) {
+    private Book makeBook(String title, int numberOfCopies, String description, String coverImageUrl, Author ... authors) {
         Book book = new Book();
 
         book.setTitle(title);
+        book.setDescription(description);
+        book.setCoverImageUrl(coverImageUrl);
 
         Set<Author> authorSet = new HashSet<>(Arrays.asList(authors));
         book.setAuthors(authorSet);

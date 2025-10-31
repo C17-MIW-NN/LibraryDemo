@@ -14,10 +14,15 @@ import java.util.Set;
 public class Book {
 
     @Id @GeneratedValue
-    Long bookId;
+    private Long bookId;
 
     @Column(unique = true)
-    String title;
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
+    String description;
+
+    private String coverImageUrl;
 
     @ManyToMany
     private Set<Author> authors;
@@ -71,5 +76,21 @@ public class Book {
 
     public void setCopies(List<Copy> copies) {
         this.copies = copies;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCoverImageUrl() {
+        return coverImageUrl;
+    }
+
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
     }
 }
