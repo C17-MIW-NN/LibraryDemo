@@ -10,28 +10,32 @@
 <div class="container">
     <h1>Overview of all the books</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <td>Title</td>
-                <td>Available</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </thead>
+    <div class="row row-cols-1 row-cols-md-5 g-4">
+        <div class="col" th:each="book : ${books}">
+            <div class="card h-100">
+        <!--        <img src="..." class="card-img-top" alt="...">-->
+                <div class="card-header text-center">
+                    <a th:href="@{/book/detail/{title}(title = ${book.title})}"><h5 class="card-title" th:text="${book.title}"></h5></a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="author : ${book.authors}" th:text="${author.name}"></li>
+                </ul>
+                <div class="card-body"></div>
+                <div class="card-footer">
+                    <h6 class="card-subtitle mb-2 text-body-secondary"><span th:text="${book.availableNumberOfCopies}"></span> available out of <span th:text="${book.numberOfCopies}"></span> copies</h6>
+                </div>
+            </div>
+        </div>
 
-        <tr th:each="book : ${books}">
-            <td><a th:href="@{/book/detail/{title}(title = ${book.title})}" th:text="${book.title}"></a></td>
-            <td><span th:text="${book.availableNumberOfCopies}"></span> / <span th:text="${book.numberOfCopies}"></span></td>
-        </tr>
-    </table>
-
-    <a th:href="@{/book/add}">Add a new book</a>
-
-    <p>
-        <a th:href="@{/author/all}">Show Author overview</a>
-    </p>
+        <div class="col">
+            <div class="card h-100">
+        <!--        <img src="..." class="card-img-top" alt="...">-->
+                <div class="card-body align-content-center text-center">
+                    <a th:href="@{/book/add}">Add a new book</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div th:replace="~{fragments/general :: footer}"></div>
