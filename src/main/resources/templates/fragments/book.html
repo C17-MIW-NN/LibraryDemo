@@ -10,7 +10,6 @@
 
     <div class="col">
         <div class="card h-100">
-            <!--        <img src="..." class="card-img-top" alt="...">-->
             <div class="card-body align-content-center text-center">
                 <a th:href="@{/book/add}">Add a new book</a>
             </div>
@@ -19,11 +18,15 @@
 </div>
 
 <div th:fragment="bookCard(book)" class="col">
+    <!--/*@thymesVar id="book" type="nl.miwnn.ch17.vincent.librarydemo.model.Book"*/-->
+
     <div class="card h-100">
-        <!--        <img src="..." class="card-img-top" alt="...">-->
-        <div class="card-header text-center">
-            <a th:href="@{/book/detail/{title}(title = ${book.title})}"><h5 class="card-title" th:text="${book.title}"></h5></a>
-        </div>
+        <a th:href="@{/book/detail/{title}(title = ${book.title})}">
+            <img height="350px" th:src="${book.coverImageUrl}" class="card-img-top object-fit-cover" th:alt="|Cover image for ${book.title}|">
+            <div class="card-header text-center">
+                <h5 class="card-title" th:text="${book.title}"></h5>
+            </div>
+        </a>
         <ul class="list-group list-group-flush">
             <li class="list-group-item" th:each="author : ${book.authors}" th:text="${author.name}"></li>
         </ul>
@@ -35,6 +38,9 @@
 </div>
 
 <div th:fragment="bookForm(formBook, allAuthors, #fields)">
+    <!--/*@thymesVar id="formBook" type="nl.miwnn.ch17.vincent.librarydemo.model.Book"*/-->
+    <!--/*@thymesVar id="allAuthors" type="java.util.List<nl.miwnn.ch17.vincent.librarydemo.model.Author>"*/-->
+
     <form th:action="@{/book/save}" method="post" th:object="${formBook}" class="row g-3 justify-content-center">
         <input type="hidden" th:field="*{bookId}">
 
@@ -42,6 +48,20 @@
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="title" placeholder="Title of the book" th:field="*{title}">
                 <label for="title">Title</label>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="form-floating">
+                <textarea class="form-control" style="height: 8em" placeholder="Give a description for this book" id="description" th:field="*{description}"></textarea>
+                <label for="description">Description</label>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="coverImageUrl" placeholder="Title of the book" th:field="*{coverImageUrl}">
+                <label for="coverImageUrl">Cover image URL</label>
             </div>
         </div>
 
