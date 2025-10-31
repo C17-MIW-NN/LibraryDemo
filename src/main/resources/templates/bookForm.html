@@ -13,33 +13,7 @@
     <h1 class="text-center" th:if="${formBook.bookId == null}">Add a new book</h1>
     <h1 class="text-center" th:unless="${formBook.bookId == null}" th:text="|Edit ${formBook.title}|"></h1>
 
-    <form th:action="@{/book/save}" method="post" th:object="${formBook}" class="row g-3 justify-content-center">
-        <input type="hidden" th:field="*{bookId}">
-
-        <div class="col-md-8">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="title" placeholder="Title of the book" th:field="*{title}">
-                <label for="title">Title</label>
-            </div>
-        </div>
-
-        <div class="col-md-8">
-            <label for="authors" class="form-label">Author(s)</label>
-            <select class="form-select" id="authors" th:field="*{authors}" multiple>
-                <option th:each="author : ${allAuthors}"
-                        th:text="${author.name}"
-                        th:value="${author.authorId}">
-                </option>
-            </select>
-        </div>
-
-        <div class="col-md-8 justify-content-center">
-            <button type="submit" class="btn btn-primary">
-                <span th:if="${formBook.bookId == null}">Add book</span>
-                <span th:unless="${formBook.bookId == null}">Update book</span>
-            </button>
-        </div>
-    </form>
+    <div th:replace="~{fragments/book :: bookForm(${formBook}, ${allAuthors}, ${#fields})}"></div>
 </div>
 
 <div th:replace="~{fragments/general :: footer}"></div>

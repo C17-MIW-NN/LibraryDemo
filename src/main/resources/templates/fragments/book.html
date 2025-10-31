@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<div th:fragment="bookCards(books)" class="row row-cols-1 row-cols-md-5 g-4">
+    <div th:each="book : ${books}" th:insert="~{:: bookCard(book)}"></div>
+</div>
+
+<div th:fragment="bookCardsNew(books)" class="row row-cols-1 row-cols-md-5 g-4">
+    <div th:each="book : ${books}" th:insert="~{:: bookCard(book)}"></div>
+
+    <div class="col">
+        <div class="card h-100">
+            <!--        <img src="..." class="card-img-top" alt="...">-->
+            <div class="card-body align-content-center text-center">
+                <a th:href="@{/book/add}">Add a new book</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="bookCard(book)" class="col">
+    <div class="card h-100">
+        <!--        <img src="..." class="card-img-top" alt="...">-->
+        <div class="card-header text-center">
+            <a th:href="@{/book/detail/{title}(title = ${book.title})}"><h5 class="card-title" th:text="${book.title}"></h5></a>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" th:each="author : ${book.authors}" th:text="${author.name}"></li>
+        </ul>
+        <div class="card-body"></div>
+        <div class="card-footer">
+            <h6 class="card-subtitle mb-2 text-body-secondary"><span th:text="${book.availableNumberOfCopies}"></span> available out of <span th:text="${book.numberOfCopies}"></span> copies</h6>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="bookForm(formBook, allAuthors, #fields)">
+    <form th:action="@{/book/save}" method="post" th:object="${formBook}" class="row g-3 justify-content-center">
+        <input type="hidden" th:field="*{bookId}">
+
+        <div class="col-md-8">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="title" placeholder="Title of the book" th:field="*{title}">
+                <label for="title">Title</label>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <label for="authors" class="form-label">Author(s)</label>
+            <select class="form-select" id="authors" th:field="*{authors}" multiple>
+                <option th:each="author : ${allAuthors}"
+                        th:text="${author.name}"
+                        th:value="${author.authorId}">
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-8 justify-content-center">
+            <button type="submit" class="btn btn-primary">
+                <span th:if="${formBook.bookId == null}">Add book</span>
+                <span th:unless="${formBook.bookId == null}">Update book</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+</html>
