@@ -15,6 +15,16 @@ public class Author {
     private Long authorId;
 
     private String name;
+    private String imageURL;
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "authorId=" + authorId +
+                ", name='" + name + '\'' +
+                ", imageURL='" + imageURL + '\'' +
+                '}';
+    }
 
     public Long getAuthorId() {
         return authorId;
@@ -30,5 +40,13 @@ public class Author {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

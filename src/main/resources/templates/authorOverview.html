@@ -14,19 +14,23 @@
     <table>
         <thead>
         <tr>
+            <td></td>
             <td>Name</td>
             <td></td>
         </tr>
         </thead>
 
         <tr th:each="author : ${allAuthors}">
+            <td><img th:src="${author.imageURL}" th:alt="|Image for ${author.name}|"/> </td>
             <td th:text="${author.name}"></td>
             <td><a th:href="@{/author/delete/{authorId}(authorId = ${author.authorId})}">delete</a></td>
         </tr>
     </table>
 
-    <form th:action="@{/author/save}" method="post" th:object="${formAuthor}">
-        Name: <input type="text" th:field="*{name}"> <input type="submit" value="Add author">
+    <form th:action="@{/author/save}" method="post" th:object="${formAuthor}" enctype="multipart/form-data">
+        <label for="name">Name:</label> <input id="name" type="text" th:field="*{name}">
+        <label for="imageFile" class="form-label">Author image:</label> <input type="file" id="imageFile" name="authorImage" accept="image/*">
+        <input type="submit" value="Add author">
     </form>
 </div>
 
