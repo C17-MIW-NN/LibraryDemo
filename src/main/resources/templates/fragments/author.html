@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<div th:fragment="authorCards(authors)" class="row row-cols-1 row-cols-md-4 g-4">
+    <div th:each="author : ${authors}" th:insert="~{:: authorCard(author)}"></div>
+</div>
+
+<div th:fragment="authorCardsNew(authors)" class="row row-cols-1 row-cols-md-4 g-4">
+    <div th:each="author : ${authors}" th:insert="~{:: authorCard(author)}"></div>
+
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body align-content-center text-center">
+                <!--/*@thymesVar id="formAuthor" type="nl.miwnn.ch17.vincent.librarydemo.model.Author"*/-->
+                <form th:action="@{/author/save}" method="post" th:object="${formAuthor}" enctype="multipart/form-data">
+                    <label for="name">Name:</label>
+
+                    <input id="name" type="text" th:field="*{name}">
+
+                    <label for="imageFile" class="form-label">Author image:</label>
+
+                    <input type="file" id="imageFile" name="authorImage" accept="image/*">
+
+                    <input type="submit" value="Add author">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="authorCard(author)" class="col">
+    <!--/*@thymesVar id="book" type="nl.miwnn.ch17.vincent.librarydemo.model.Author"*/-->
+
+    <div class="card h-100">
+        <img height="500px" th:src="${author.imageURL}" class="card-img-top object-fit-cover" th:alt="|Image for ${author.name}|">
+        <div class="card-header text-center">
+            <h5 class="card-title" th:text="${author.name}"></h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" th:each="book : ${author.books}">
+                <a th:href="@{/book/detail/{title}(title = ${book.title})}" th:text="${book.title}"></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</html>

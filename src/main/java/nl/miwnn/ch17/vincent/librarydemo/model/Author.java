@@ -3,6 +3,9 @@ package nl.miwnn.ch17.vincent.librarydemo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+
+import java.util.Set;
 
 /**
  * @author Vincent Velthuizen
@@ -16,6 +19,9 @@ public class Author {
 
     private String name;
     private String imageURL;
+
+    @ManyToMany(mappedBy = "authors")
+    private Set<Book> books;
 
     @Override
     public String toString() {
@@ -48,5 +54,9 @@ public class Author {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
     }
 }
