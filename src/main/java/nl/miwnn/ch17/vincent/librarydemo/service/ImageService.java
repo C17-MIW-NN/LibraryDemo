@@ -3,6 +3,7 @@ package nl.miwnn.ch17.vincent.librarydemo.service;
 import nl.miwnn.ch17.vincent.librarydemo.model.Image;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.ImageRepository;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,10 +33,7 @@ public class ImageService {
         Image image = new Image();
         image.setFileName(file.getOriginalFilename());
         image.setContentType(contentType);
-        image.setFileName(image.getFileName());
         image.setData(file.getBytes());
-
-        System.out.println(image);
 
         imageRepository.save(image);
     }
@@ -43,5 +41,13 @@ public class ImageService {
     public Image getImage(String fileName) {
         return imageRepository.findByFileName(fileName)
                 .orElseThrow(() -> new NoSuchElementException(fileName));
+    }
+
+    public void saveImage(ClassPathResource imageResource) throws IOException {
+        Image image = new Image();
+        image.setFileName(imageResource.getFilename());
+        image.setContentType(MediaType.IMAGE_JPEG);
+        image.setData(imageResource.getInputStream().readAllBytes());
+        imageRepository.save(image);
     }
 }
