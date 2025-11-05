@@ -3,10 +3,12 @@ package nl.miwnn.ch17.vincent.librarydemo.controller;
 import nl.miwnn.ch17.vincent.librarydemo.model.Author;
 import nl.miwnn.ch17.vincent.librarydemo.model.Book;
 import nl.miwnn.ch17.vincent.librarydemo.model.Copy;
+import nl.miwnn.ch17.vincent.librarydemo.model.LibraryUser;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.AuthorRepository;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.BookRepository;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.CopyRepository;
 import nl.miwnn.ch17.vincent.librarydemo.service.ImageService;
+import nl.miwnn.ch17.vincent.librarydemo.service.LibraryUserService;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
@@ -27,15 +29,18 @@ public class InitializeController {
     private final BookRepository bookRepository;
     private final CopyRepository copyRepository;
     private final ImageService imageService;
+    private final LibraryUserService libraryUserService;
 
     public InitializeController(AuthorRepository authorRepository,
                                 BookRepository bookRepository,
                                 CopyRepository copyRepository,
-                                ImageService imageService) {
+                                ImageService imageService,
+                                LibraryUserService libraryUserService) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.copyRepository = copyRepository;
         this.imageService = imageService;
+        this.libraryUserService = libraryUserService;
     }
 
     @EventListener
@@ -46,6 +51,8 @@ public class InitializeController {
     }
 
     private void initializeDB() {
+        makeUser("Piet", "PietPW");
+
         Author sanderson = makeAuthor("Brandon Sanderson", "/image/Brandon_Sanderson.jpg");
         Author rothfuss = makeAuthor("Patrick Rothfuss", "/image/Patrick_Rothfuss.jpg");
         Author tolkien = makeAuthor("J.R.R. Tolkien", "/image/J.R.R._Tolkien.jpg");
@@ -56,6 +63,16 @@ public class InitializeController {
         makeBook("The Name of the Wind", 2, "The Name of the Wind, also referred to as The Kingkiller Chronicle: Day One, is a heroic fantasy novel written by American author Patrick Rothfuss. It is the first book in the ongoing fantasy trilogy The Kingkiller Chronicle, followed by The Wise Man's Fear. It was published on March 27, 2007, by DAW Books.", "https://upload.wikimedia.org/wikipedia/en/5/56/TheNameoftheWind_cover.jpg", rothfuss);
         makeBook("The Final Empire", 3, "Mistborn: The Final Empire, also known simply as Mistborn or The Final Empire...", "https://upload.wikimedia.org/wikipedia/en/4/44/Mistborn-cover.jpg", sanderson);
         makeBook("Bobbi doet boodschappen", 1, "Bobbi gaat mee boodschappen doen.", "https://www.bobbi.nl/wp-content/uploads/2022/06/Bobbi-doet-boodschappen.jpg", maas);
+    }
+
+    private LibraryUser makeUser(String username, String password) {
+        LibraryUser user = new LibraryUser();
+
+        user.setUsername(username);
+        user.setPassword(password);
+
+        libraryUserService.saveUser(user);
+        return user;
     }
 
     private Author makeAuthor(String name, String filename) {
