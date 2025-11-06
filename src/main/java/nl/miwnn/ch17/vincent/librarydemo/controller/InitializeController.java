@@ -1,5 +1,6 @@
 package nl.miwnn.ch17.vincent.librarydemo.controller;
 
+import com.opencsv.CSVReader;
 import nl.miwnn.ch17.vincent.librarydemo.model.Author;
 import nl.miwnn.ch17.vincent.librarydemo.model.Book;
 import nl.miwnn.ch17.vincent.librarydemo.model.Copy;
@@ -14,10 +15,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Vincent Velthuizen
@@ -31,6 +32,8 @@ public class InitializeController {
     private final ImageService imageService;
     private final LibraryUserService libraryUserService;
 
+    private final Map<String, Author> authorCache;
+
     public InitializeController(AuthorRepository authorRepository,
                                 BookRepository bookRepository,
                                 CopyRepository copyRepository,
@@ -41,6 +44,8 @@ public class InitializeController {
         this.copyRepository = copyRepository;
         this.imageService = imageService;
         this.libraryUserService = libraryUserService;
+
+        authorCache = new HashMap<>();
     }
 
     @EventListener
@@ -53,16 +58,25 @@ public class InitializeController {
     private void initializeDB() {
         makeUser("Piet", "PietPW");
 
-        Author sanderson = makeAuthor("Brandon Sanderson", "/image/Brandon_Sanderson.jpg");
-        Author rothfuss = makeAuthor("Patrick Rothfuss", "/image/Patrick_Rothfuss.jpg");
-        Author tolkien = makeAuthor("J.R.R. Tolkien", "/image/J.R.R._Tolkien.jpg");
-        Author maas = makeAuthor("Monica Maas", "/image/Monica_Maas.jpg");
+        loadAuthors("/sampledata/authors.csv");
+        loadBooks("/sampledata/books.csv");
+    }
 
-        makeBook("The Hobbit", 3, "The Hobbit, or There and Back Again is a children's fantasy novel by the English author J. R. R. Tolkien...", "https://images.thenile.io/r1000/9780261103283.jpg", tolkien);
-        makeBook("The Lord of the Rings", 5, "The Lord of the Rings is an epic high fantasy novel by the English author and scholar J. R. R. Tolkien...", "https://www.bibdsl.co.uk/imagegallery/bookdata/cd427/9780261103252.JPG", tolkien);
-        makeBook("The Name of the Wind", 2, "The Name of the Wind, also referred to as The Kingkiller Chronicle: Day One, is a heroic fantasy novel written by American author Patrick Rothfuss. It is the first book in the ongoing fantasy trilogy The Kingkiller Chronicle, followed by The Wise Man's Fear. It was published on March 27, 2007, by DAW Books.", "https://upload.wikimedia.org/wikipedia/en/5/56/TheNameoftheWind_cover.jpg", rothfuss);
-        makeBook("The Final Empire", 3, "Mistborn: The Final Empire, also known simply as Mistborn or The Final Empire...", "https://upload.wikimedia.org/wikipedia/en/4/44/Mistborn-cover.jpg", sanderson);
-        makeBook("Bobbi doet boodschappen", 1, "Bobbi gaat mee boodschappen doen.", "https://www.bobbi.nl/wp-content/uploads/2022/06/Bobbi-doet-boodschappen.jpg", maas);
+    private void loadAuthors(String filename) {
+        try (CSVReader reader = new CSVReader(new FileReader(new ClassPathResource(filename).getFile()))) {
+            // skip header
+            reader.skip(1);
+
+            for (String[] authorLine : reader) {
+                String name = authorLine[0];
+                String imageUrl = authorLine[1];
+
+                Author author = makeAuthor(name, imageUrl);
+                authorCache.put(name, author);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private LibraryUser makeUser(String username, String password) {
@@ -97,7 +111,35 @@ public class InitializeController {
         imageService.saveImage(imageResource);
     }
 
-    private Book makeBook(String title, int numberOfCopies, String description, String coverImageUrl, Author ... authors) {
+    private void loadBooks(String filename) {
+        try (CSVReader reader = new CSVReader(new FileReader(new ClassPathResource(filename).getFile()))) {
+            // skip header
+            reader.skip(1);
+
+            for (String[] bookLine : reader) {
+                String title = bookLine[0];
+                String description = bookLine[1];
+                String coverImageUrl = bookLine[2];
+                int numberOfCopies = Integer.parseInt(bookLine[3]);
+
+                Book book = makeBook(title, description, coverImageUrl, numberOfCopies);
+
+                for (String authorName : bookLine[4].split(", ")) {
+                    if (!authorCache.containsKey(authorName)) {
+//                        Author author = makeAuthor(authorName, "");
+//                        authorCache.put(authorName, author);
+                    }
+                    book.getAuthors().add(authorCache.get(authorName));
+                }
+
+                bookRepository.save(book);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Book makeBook(String title, String description, String coverImageUrl, int numberOfCopies, Author ... authors) {
         Book book = new Book();
 
         book.setTitle(title);
@@ -119,7 +161,7 @@ public class InitializeController {
     private Copy makeCopy(Book book, boolean available) {
         Copy copy = new Copy(book);
 
-        copy.setAvailable(available);
+        copy.setAvailable(Boolean.valueOf(available));
         copyRepository.save(copy);
 
         return copy;
