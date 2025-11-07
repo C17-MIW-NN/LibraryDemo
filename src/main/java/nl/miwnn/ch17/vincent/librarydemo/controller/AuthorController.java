@@ -32,6 +32,7 @@ public class AuthorController {
     public String showAuthorOverview(Model datamodel) {
         datamodel.addAttribute("allAuthors", authorRepository.findAll());
         datamodel.addAttribute("formAuthor", new Author());
+        datamodel.addAttribute("formModalHidden", true);
 
         return "authorOverview";
     }

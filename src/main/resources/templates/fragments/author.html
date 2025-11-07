@@ -8,40 +8,77 @@
 <div th:fragment="authorCardsNew(authors)" class="row row-cols-1 row-cols-md-4 g-4">
     <div th:each="author : ${authors}" th:insert="~{:: authorCard(author)}"></div>
 
-    <div class="col">
-        <div class="card h-100">
+    <div class="col h-100">
+        <div class="card">
             <div class="card-body align-content-center text-center">
-                <!--/*@thymesVar id="formAuthor" type="nl.miwnn.ch17.vincent.librarydemo.model.Author"*/-->
-                <form th:action="@{/author/save}" method="post" th:object="${formAuthor}" enctype="multipart/form-data">
-                    <label for="name">Name:</label>
-
-                    <input id="name" type="text" th:field="*{name}">
-
-                    <label for="imageFile" class="form-label">Author image:</label>
-
-                    <input type="file" id="imageFile" name="authorImage" accept="image/*">
-
-                    <input type="submit" value="Add author">
-                </form>
+                <button type="button"
+                        class="btn btn-outline-secondary btn-lg px-4 fw-bold"
+                        data-bs-toggle="modal" data-bs-target="#newForm">
+                    <i class="bi bi-plus-square"></i> Add author
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<div th:fragment="authorCard(author)" class="col">
+<div th:fragment="authorCard(author)" class="col h-100">
     <!--/*@thymesVar id="book" type="nl.miwnn.ch17.vincent.librarydemo.model.Author"*/-->
 
-    <div class="card h-100">
-        <img height="500px" th:src="${author.imageURL}" class="card-img-top object-fit-cover" th:alt="|Image for ${author.name}|">
+    <div class="card">
+        <img height="350px" class="card-img-top object-fit-cover" th:src="${author.imageURL}" th:alt="|Image for ${author.name}|">
         <div class="card-header text-center">
-            <h5 class="card-title" th:text="${author.name}"></h5>
+            <h2 class="card-title" th:text="${author.name}"></h2>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item" th:each="book : ${author.books}">
                 <a th:href="@{/book/detail/{title}(title = ${book.title})}" th:text="${book.title}"></a>
             </li>
         </ul>
+        <div class="card-body"></div>
+        <div class="card-footer">
+            <h6 class="card-subtitle text-muted text-center" th:text="|${author.books?.size} books total|"></h6>
+        </div>
     </div>
+</div>
+
+<div th:fragment="authorForm(formAuthor, #fields)">
+    <!--/*@thymesVar id="formAuthor" type="nl.miwnn.ch17.vincent.librarydemo.model.Author"*/-->
+
+    <form class="row g-3" th:action="@{/author/save}" method="post" th:object="${formAuthor}" enctype="multipart/form-data">
+        <div class="col-md-12">
+            <div class="form-floating mb-3">
+                <input type="text" id="name" class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''" th:field="*{name}" placeholder="Name">
+                <label for="name">Name</label>
+            </div>
+            <span id="nameHelpInline" class="form-text invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+
+        <div class="col-md-12">
+            <label for="imageFile" class="col-form-label">Image for the author</label>
+            <input class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''" type="file" id="imageFile" name="authorImage" accept="image/*">
+            <span id="imageFileHelp" class="form-text" th:if="${#fields.hasErrors('imageURL')}" th:errors="*{imageURL}"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-3">Add author</button>
+    </form>
+</div>
+
+<!-- Modal -->
+<div th:fragment="authorModal(formAuthor, #fields)" class="modal fade" id="newForm" tabindex="-1" aria-labelledby="newFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <h1 class="modal-title text-center" id="editFormModalLabel">Add an author</h1>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div th:replace="~{:: authorForm(${formAuthor}, ${#fields})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:unless="${formModalHidden}">
+        new bootstrap.Modal(document.getElementById('newForm'), {}).toggle()
+    </script>
 </div>
 
 </html>
