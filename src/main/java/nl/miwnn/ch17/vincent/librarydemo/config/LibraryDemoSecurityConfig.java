@@ -22,7 +22,7 @@ public class LibraryDemoSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests((request) -> request
-                        .requestMatchers("/", "/book/all").permitAll()
+                        .requestMatchers("/", "/book/all", "/book/detail/*").permitAll()
                         .requestMatchers("/css/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )
