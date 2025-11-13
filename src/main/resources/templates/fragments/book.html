@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 
-<div th:fragment="bookCards(books)" class="row row-cols-5 g-4">
+<div th:fragment="bookCards(books)" class="row row-cols-6 g-5">
     <div th:each="book : ${books}" th:insert="~{:: bookCard(book)}"></div>
 </div>
 
-<div th:fragment="bookCardsNew(books)" class="row row-cols-5 g-4">
+<div th:fragment="bookCardsNew(books)" class="row row-cols-6 g-4">
     <div th:each="book : ${books}" th:insert="~{:: bookCard(book)}"></div>
 
     <div class="col h-100">
@@ -22,15 +22,18 @@
 
     <div class="card h-100">
         <a th:href="@{/book/detail/{title}(title = ${book.title})}">
-            <img height="350px" th:src="${book.coverImageUrl}" class="card-img-top object-fit-cover" th:alt="|Cover image for ${book.title}|">
-            <div class="card-header text-center">
-                <h5 class="card-title" th:text="${book.title}"></h5>
-            </div>
+            <img height="275" th:src="${book.coverImageUrl}" class="card-img-top object-fit-cover" th:alt="|Cover image for ${book.title}|">
         </a>
+        <div class="card-body text-center bg-body-secondary">
+            <a th:href="@{/book/detail/{title}(title = ${book.title})}">
+                <h5 class="card-title" th:text="${book.title}"></h5>
+            </a>
+        </div>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item" th:each="author : ${book.authors}" th:text="${author.name}"></li>
+            <li class="list-group-item" th:each="author : ${book.authors}">
+                <a th:href="@{/author/details/{name}(name = ${author.name})}" th:text="${author.name}"></a>
+            </li>
         </ul>
-        <div class="card-body"></div>
         <div class="card-footer">
             <h6 class="card-subtitle text-center"><span th:text="${book.availableNumberOfCopies}"></span> available out of <span th:text="${book.numberOfCopies}"></span> copies</h6>
         </div>
