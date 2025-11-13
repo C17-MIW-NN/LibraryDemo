@@ -17,7 +17,7 @@
     <div class="container-fluid">
     <a class="navbar-brand" href="/">Home</a>
     <ul class="nav justify-content-center">
-        <li class="nav-item" sec:authorize="isAuthenticated()">
+        <li class="nav-item">
             <a class="nav-link" th:href="@{/author/all}">Authors</a>
         </li>
         <li class="nav-item">

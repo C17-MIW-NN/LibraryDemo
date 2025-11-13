@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 
-<div th:fragment="authorCards(authors)" class="row row-cols-1 row-cols-md-4 g-4">
+<div th:fragment="authorCards(authors)" class="row row-cols-1 row-cols-md-5 g-4">
     <div th:each="author : ${authors}" th:insert="~{:: authorCard(author)}"></div>
 </div>
 
-<div th:fragment="authorCardsNew(authors)" class="row row-cols-1 row-cols-md-4 g-4">
+<div th:fragment="authorCardsNew(authors)" class="row row-cols-1 row-cols-md-5 g-4">
     <div th:each="author : ${authors}" th:insert="~{:: authorCard(author)}"></div>
 
     <div class="col h-100">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-body align-content-center text-center">
                 <button type="button"
                         class="btn btn-outline-secondary btn-lg px-4 fw-bold"
@@ -24,17 +24,19 @@
 <div th:fragment="authorCard(author)" class="col h-100">
     <!--/*@thymesVar id="book" type="nl.miwnn.ch17.vincent.librarydemo.model.Author"*/-->
 
-    <div class="card">
-        <img height="350px" class="card-img-top object-fit-cover" th:src="${author.imageURL}" th:alt="|Image for ${author.name}|">
-        <div class="card-header text-center">
-            <h2 class="card-title" th:text="${author.name}"></h2>
-        </div>
+    <div class="card h-100">
+            <div class="card-body text-center bg-body-secondary">
+
+                <a th:href="@{/author/details/{name}(name = ${author.name})}">
+                <img class="img object-fit-cover w-100 cirkel" th:src="${author.imageURL}" th:alt="|Image for ${author.name}|">
+                <h2 class="card-title" th:text="${author.name}"></h2>
+                </a>
+            </div>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item" th:each="book : ${author.books}">
+            <li class="list-group-item" th:each="book, iterStat : ${author.books}" th:if="${iterStat.index < 3}">
                 <a th:href="@{/book/detail/{title}(title = ${book.title})}" th:text="${book.title}"></a>
             </li>
         </ul>
-        <div class="card-body"></div>
         <div class="card-footer">
             <h6 class="card-subtitle text-muted text-center" th:text="|${author.books?.size} books total|"></h6>
         </div>

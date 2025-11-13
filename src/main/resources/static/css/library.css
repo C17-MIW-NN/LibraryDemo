@@ -2,3 +2,8 @@
     margin-top: 76px;
     margin-bottom: 60px;
 }
+
+.cirkel {
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}

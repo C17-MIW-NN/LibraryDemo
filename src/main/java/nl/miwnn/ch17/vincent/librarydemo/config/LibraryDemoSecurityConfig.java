@@ -23,6 +23,7 @@ public class LibraryDemoSecurityConfig {
         httpSecurity
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers("/", "/book/all", "/book/detail/*").permitAll()
+                        .requestMatchers("/author/all", "/author/details/*", "/image/**").permitAll()
                         .requestMatchers("/css/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )

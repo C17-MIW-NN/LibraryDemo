@@ -2,14 +2,14 @@ package nl.miwnn.ch17.vincent.librarydemo.controller;
 
 import nl.miwnn.ch17.vincent.librarydemo.model.Author;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.AuthorRepository;
-import nl.miwnn.ch17.vincent.librarydemo.repositories.BookRepository;
 import nl.miwnn.ch17.vincent.librarydemo.service.ImageService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -61,5 +61,15 @@ public class AuthorController {
     public String deleteAuthor(@PathVariable("authorId") Long authorId) {
         authorRepository.deleteById(authorId);
         return "redirect:/author/all";
+    }
+
+    @GetMapping("/details/{authorName}")
+    public String showAuthorDetails(@PathVariable("authorName") String name, Model datamodel) {
+        Author author = authorRepository.findByName(name).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found with name: " + name));
+
+        datamodel.addAttribute("author", author);
+
+        return "authorDetails";
     }
 }
