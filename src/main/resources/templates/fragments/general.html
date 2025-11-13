@@ -13,7 +13,7 @@
 
 <body>
 
-<div th:fragment="navbar" class="navbar fixed-top  bg-body-tertiary">
+<div th:fragment="navbar" class="navbar fixed-top  bg-body-secondary">
     <div class="container-fluid">
     <a class="navbar-brand" href="/">Home</a>
     <ul class="nav justify-content-center">
@@ -33,9 +33,12 @@
     </div>
 </div>
 
-<div th:fragment="footer" class="footer fixed-bottom">
-  <footer><p class="text-center text text-muted">Copyright Vincent Velthuizen &copy;2025</p></footer>
-</div>
+<footer th:fragment="footer" class="footer fixed-bottom bg-body-secondary">
+    <div class="container-fluid align-middle text-center p-2">
+        <span class="text-muted">Vincent Velthuizen 2025</span>
+    </div>
+
+</footer>
 
 <div th:fragment="bottomScripts">
   <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
