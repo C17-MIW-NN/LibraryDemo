@@ -20,9 +20,12 @@ public class Book {
     private String title;
 
     @Column(columnDefinition = "TEXT")
-    String description;
+    private String description;
 
     private String coverImageUrl;
+
+    @ManyToOne
+    private Genre genre;
 
     @ManyToMany
     private Set<Author> authors;
@@ -92,5 +95,13 @@ public class Book {
 
     public void setCoverImageUrl(String coverImageUrl) {
         this.coverImageUrl = coverImageUrl;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 }

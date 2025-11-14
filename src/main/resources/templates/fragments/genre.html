@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<div th:fragment="genreCards(genres)" class="row row-cols-6 g-5">
+    <div th:each="genre : ${genres}" th:insert="~{:: genreCard(genre)}"></div>
+</div>
+
+<div th:fragment="genreCardsNew(genres)" class="row row-cols-6 g-4">
+    <div th:each="genre : ${genres}" th:insert="~{:: genreCard(genre)}"></div>
+
+    <div class="col h-100">
+        <div class="card h-100">
+            <div class="card-body align-content-center text-center">
+                <a th:href="@{/book/add}">Add a new book</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="genreCard(genre)" class="col h-100">
+    <!--/*@thymesVar id="genre" type="nl.miwnn.ch17.vincent.librarydemo.model.Genre"*/-->
+
+    <div class="card h-100">
+        <a th:href="@{/genre/detail/{shortName}(shortName = ${genre.shortName})}">
+            <img height="275" th:src="${genre.exampleBook.coverImageUrl}" class="card-img-top object-fit-cover" th:alt="|Cover image for ${genre.exampleBook.title}|">
+        </a>
+        <div class="card-body text-center bg-body-secondary">
+            <a th:href="@{/book/detail/{title}(title = ${genre.exampleBook.title})}">
+                <h5 class="card-title" th:text="${genre.fullName}"></h5>
+            </a>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" th:each="book : ${genre.books}">
+                <a th:href="@{/book/detail/{title}(title = ${book.title})}" th:text="${book.title}"></a>
+            </li>
+        </ul>
+        <div class="card-footer">
+            <h6 class="card-subtitle text-center"><span th:text="${genre.books.size}"></span> books available in this genre.</h6>
+        </div>
+    </div>
+</div>
+
+</html>

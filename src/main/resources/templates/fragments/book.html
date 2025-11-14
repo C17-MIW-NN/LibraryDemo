@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<div th:fragment="bookForm(formBook, allAuthors, #fields)">
+<div th:fragment="bookForm(formBook, allAuthors, allGenres, #fields)">
     <!--/*@thymesVar id="allAuthors" type="java.util.List<nl.miwnn.ch17.vincent.librarydemo.model.Author>"*/-->
     <!--/*@thymesVar id="formBook" type="nl.miwnn.ch17.vincent.librarydemo.model.Book"*/-->
 
@@ -59,6 +59,16 @@
                 <textarea class="form-control" style="height: 8em" placeholder="Give a description for this book" id="description" th:field="*{description}"></textarea>
                 <label for="description">Description</label>
             </div>
+        </div>
+
+        <div class="col-md-8">
+            <label for="genre" class="form-label">Genre</label>
+            <select class="form-select" id="genre" th:field="*{genre}">
+                <option th:each="genre : ${allGenres}"
+                        th:text="${genre.fullName}"
+                        th:value="${genre.genreId}">
+                </option>
+            </select>
         </div>
 
         <div class="col-md-8">

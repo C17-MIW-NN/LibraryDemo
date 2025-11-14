@@ -13,7 +13,7 @@
     <h1 class="text-center" th:if="${formBook.bookId == null}">Add a new book</h1>
     <h1 class="text-center" th:unless="${formBook.bookId == null}" th:text="|Edit ${formBook.title}|"></h1>
 
-    <div th:replace="~{fragments/book :: bookForm(${formBook}, ${allAuthors}, ${#fields})}"></div>
+    <div th:replace="~{fragments/book :: bookForm(${formBook}, ${allAuthors}, ${allGenres}, ${#fields})}"></div>
 </div>
 
 <div th:replace="~{fragments/general :: footer}"></div>

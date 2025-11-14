@@ -3,6 +3,7 @@ package nl.miwnn.ch17.vincent.librarydemo.controller;
 import nl.miwnn.ch17.vincent.librarydemo.model.Book;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.AuthorRepository;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.BookRepository;
+import nl.miwnn.ch17.vincent.librarydemo.repositories.GenreRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +24,14 @@ import java.util.Optional;
 public class BookController {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final GenreRepository genreRepository;
 
-    public BookController(AuthorRepository authorRepository, BookRepository bookRepository) {
+    public BookController(AuthorRepository authorRepository,
+                          BookRepository bookRepository,
+                          GenreRepository genreRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
+        this.genreRepository = genreRepository;
     }
 
     @GetMapping({"/book/all", "/"})
@@ -55,6 +60,7 @@ public class BookController {
     private String showBookForm(Model datamodel, Book book) {
         datamodel.addAttribute("formBook", book);
         datamodel.addAttribute("allAuthors", authorRepository.findAll());
+        datamodel.addAttribute("allGenres", genreRepository.findAll());
 
         return "bookForm";
     }
