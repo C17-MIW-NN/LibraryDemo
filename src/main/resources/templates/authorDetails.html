@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
 <head th:replace="~{fragments/general :: baseheader(~{:: title})}">
-    <title>authorDetails.html</title>
+    <title th:text="${author.name}"></title>
 </head>
 <body>
 
@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div th:replace="~{fragments/book :: bookCards(${author.books})}">Test</div>
+    <div th:replace="~{fragments/book :: bookCards(${author.books})}"></div>
 </div>
 
 <div th:replace="~{fragments/general :: footer}"></div>
