@@ -25,12 +25,12 @@
             <img height="275" th:src="${genre.exampleBook.coverImageUrl}" class="card-img-top object-fit-cover" th:alt="|Cover image for ${genre.exampleBook.title}|">
         </a>
         <div class="card-body text-center bg-body-secondary">
-            <a th:href="@{/book/detail/{title}(title = ${genre.exampleBook.title})}">
+<!--            <a th:href="@{/genre/details/{shortName}(shortName = ${genre.shortName})}">-->
                 <h5 class="card-title" th:text="${genre.fullName}"></h5>
-            </a>
+<!--            </a>-->
         </div>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item" th:each="book : ${genre.books}">
+            <li class="list-group-item" th:each="book, iterStat : ${genre.books}" th:if="${iterStat.index < 3}">
                 <a th:href="@{/book/detail/{title}(title = ${book.title})}" th:text="${book.title}"></a>
             </li>
         </ul>
