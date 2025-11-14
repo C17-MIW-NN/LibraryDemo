@@ -1,13 +1,11 @@
 package nl.miwnn.ch17.vincent.librarydemo.controller;
 
 import com.opencsv.CSVReader;
-import nl.miwnn.ch17.vincent.librarydemo.model.Author;
-import nl.miwnn.ch17.vincent.librarydemo.model.Book;
-import nl.miwnn.ch17.vincent.librarydemo.model.Copy;
-import nl.miwnn.ch17.vincent.librarydemo.model.LibraryUser;
+import nl.miwnn.ch17.vincent.librarydemo.model.*;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.AuthorRepository;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.BookRepository;
 import nl.miwnn.ch17.vincent.librarydemo.repositories.CopyRepository;
+import nl.miwnn.ch17.vincent.librarydemo.repositories.GenreRepository;
 import nl.miwnn.ch17.vincent.librarydemo.service.ImageService;
 import nl.miwnn.ch17.vincent.librarydemo.service.LibraryUserService;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -29,23 +27,28 @@ public class InitializeController {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
     private final CopyRepository copyRepository;
+    private final GenreRepository genreRepository;
     private final ImageService imageService;
     private final LibraryUserService libraryUserService;
 
     private final Map<String, Author> authorCache;
+    private final Map<String, Genre> genreCache;
 
     public InitializeController(AuthorRepository authorRepository,
                                 BookRepository bookRepository,
                                 CopyRepository copyRepository,
+                                GenreRepository genreRepository,
                                 ImageService imageService,
                                 LibraryUserService libraryUserService) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.copyRepository = copyRepository;
+        this.genreRepository = genreRepository;
         this.imageService = imageService;
         this.libraryUserService = libraryUserService;
 
         authorCache = new HashMap<>();
+        genreCache = new HashMap<>();
     }
 
     @EventListener
@@ -119,12 +122,13 @@ public class InitializeController {
             for (String[] bookLine : reader) {
                 String title = bookLine[0];
                 String description = bookLine[1];
-                String coverImageUrl = bookLine[2];
-                int numberOfCopies = Integer.parseInt(bookLine[3]);
+                String genre = bookLine[2];
+                String coverImageUrl = bookLine[3];
+                int numberOfCopies = Integer.parseInt(bookLine[4]);
 
-                Book book = makeBook(title, description, coverImageUrl, numberOfCopies);
+                Book book = makeBook(title, description, genre, coverImageUrl, numberOfCopies);
 
-                for (String authorName : bookLine[4].split(", ")) {
+                for (String authorName : bookLine[5].split(", ")) {
                     if (!authorCache.containsKey(authorName)) {
 //                        Author author = makeAuthor(authorName, "");
 //                        authorCache.put(authorName, author);
@@ -139,12 +143,17 @@ public class InitializeController {
         }
     }
 
-    private Book makeBook(String title, String description, String coverImageUrl, int numberOfCopies, Author ... authors) {
+    private Book makeBook(String title, String description, String genre, String coverImageUrl, int numberOfCopies, Author ... authors) {
         Book book = new Book();
 
         book.setTitle(title);
         book.setDescription(description);
         book.setCoverImageUrl(coverImageUrl);
+
+        if (!genreCache.containsKey(genre)) {
+            makeGenre(genre);
+        }
+        book.setGenre(genreCache.get(genre));
 
         Set<Author> authorSet = new HashSet<>(Arrays.asList(authors));
         book.setAuthors(authorSet);
@@ -156,6 +165,17 @@ public class InitializeController {
         }
 
         return book;
+    }
+
+    private Genre makeGenre(String genreShortName) {
+        Genre genre = new Genre();
+
+        genre.setShortName(genreShortName);
+
+        genreRepository.save(genre);
+        genreCache.put(genreShortName, genre);
+
+        return genre;
     }
 
     private Copy makeCopy(Book book, boolean available) {
